@@ -1,0 +1,9 @@
+{
+  "name": "thiep-moi-tin",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Thiệp mời lễ tốt nghiệp dạng web tĩnh",
+  "scripts": {
+    "start": "npx --yes serve public -l 3000"
+  }
+}

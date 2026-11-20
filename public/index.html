@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lời mời tốt nghiệp</title>
+  <meta name="description" content="Mình tốt nghiệp rồi! Bạn đến chung vui với mình nhé?">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="theme-color" content="#E6E8EB">
+
+  <!-- Ảnh xem trước khi gửi link qua Zalo/Messenger. Khi deploy xong, đổi og:url thành link thật. -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Mình tốt nghiệp rồi! 🎓">
+  <meta property="og:description" content="Bạn đến chung vui với mình chứ? Bấm vào để mở thiệp.">
+  <meta property="og:image" content="https://res.cloudinary.com/dzidt15cl/image/upload/v1795082082/tin_pqbmnj.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎓%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,600..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="locked">
+
+  <!-- Màn hình mở đầu: thông báo tin nhắn mới -->
+  <div class="gate" id="gate">
+    <button class="notif" id="openBtn" type="button" aria-label="Mở lời mời">
+      <img class="notif-avatar" src="/assets/photo.png" alt="" width="56" height="56">
+      <span class="notif-body">
+        <span class="notif-meta">Tin nhắn mới · bây giờ</span>
+        <span class="notif-title"><span class="host-name">Tên của bạn</span> gửi bạn một lời mời</span>
+        <span class="notif-text">Có chuyện vui muốn kể với bạn nè 👀</span>
+      </span>
+    </button>
+    <p class="gate-hint">Chạm vào tin nhắn để mở</p>
+  </div>
+
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <!-- Lớp sóng biển: quét lên khi bấm "Có" để đổi màu cả trang (nằm sau nội dung) -->
+  <div class="sea" id="sea" aria-hidden="true">
+    <div class="sea-base"></div>
+    <div class="sea-mid"></div>
+    <div class="sea-foam"></div>
+  </div>
+
+  <!-- Bong bóng bay liên tục ở nền -->
+  <div class="bubbles" id="bubbles" aria-hidden="true"></div>
+
+  <!-- Nút bật/tắt nhạc nền (hiện sau khi mở thiệp, và chỉ khi có file nhạc) -->
+  <button class="music" id="musicBtn" type="button" aria-label="Tắt nhạc nền" aria-pressed="true" hidden>
+    <span aria-hidden="true">🎵</span>
+  </button>
+
+  <main class="page" id="page" inert>
+
+    <!-- Phần đầu thiệp -->
+    <section class="hero" aria-labelledby="title">
+      <p class="hello rise" style="--d:.15s">Gửi <span id="toName">bạn</span>,</p>
+      <h1 id="title" class="rise" style="--d:.3s">Mình tốt nghiệp rồi!</h1>
+
+      <div class="stage rise" style="--d:.5s">
+        <div class="sticker">
+          <img src="/assets/photo.png" alt="Ảnh chân dung của chủ thiệp" width="520" height="700">
+        </div>
+        <svg class="cap" viewBox="0 0 120 90" aria-hidden="true">
+          <g stroke="#FFFFFF" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+            <path d="M60 8 L116 34 L60 60 L4 34 Z" fill="#0F0F10"/>
+            <path d="M30 48 v20 c0 8 60 8 60 0 V48 L60 62 Z" fill="#0F0F10"/>
+          </g>
+          <path d="M104 38 v30" stroke="#8C929A" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="104" cy="72" r="6" fill="#8C929A" stroke="#0F0F10" stroke-width="2"/>
+        </svg>
+        <p class="bubble">Qua chơi với mình nha!</p>
+      </div>
+
+      <p class="lead rise" style="--d:.7s">Cảm ơn bạn đã ở cạnh mình suốt chặng đường vừa rồi. Ngày này mình muốn có bạn ở đó.</p>
+    </section>
+
+    <!-- Thông tin buổi lễ -->
+    <section class="card info" aria-labelledby="infoTitle">
+      <h2 id="infoTitle">Thông tin buổi lễ</h2>
+
+      <div class="when">
+        <span class="when-day" id="evDay">25</span>
+        <span class="when-rest">
+          <span id="evMonth">tháng 11, 2026</span>
+          <span id="evWeekday">Thứ Tư</span>
+          <span id="evTime" class="when-time">9 giờ sáng – 1 giờ trưa</span>
+        </span>
+      </div>
+
+      <div class="countdown" id="countdown" role="timer" aria-live="off">
+        <div><b id="cdD">0</b><span>ngày</span></div>
+        <div><b id="cdH">0</b><span>giờ</span></div>
+        <div><b id="cdM">0</b><span>phút</span></div>
+        <div><b id="cdS">0</b><span>giây</span></div>
+      </div>
+      <p class="countdown-done" id="countdownDone" hidden>Lễ tốt nghiệp đã bắt đầu rồi 🎉</p>
+
+      <div class="venue">
+        <strong id="evVenue">Địa điểm</strong>
+        <span id="evAddress">Địa chỉ</span>
+        <span id="evPhone" hidden><span id="evPhoneLabel">Liên hệ</span>: <span id="evPhoneLink"></span></span>
+        <span id="evDress" hidden></span>
+      </div>
+
+      <div class="parking" id="evParking" hidden>
+        <strong>Chỗ gửi xe</strong>
+        <ul id="evParkingList"></ul>
+      </div>
+
+      <div class="actions">
+        <a class="btn btn-dark" id="mapsBtn" href="#" target="_blank" rel="noopener">Chỉ đường</a>
+      </div>
+    </section>
+
+    <!-- Câu hỏi chính -->
+    <section class="ask" id="ask" aria-labelledby="askTitle">
+      <h2 id="askTitle">Bạn đến chung vui với mình chứ?</h2>
+      <p class="ask-sub" id="askSub">Bấm một cái để mình biết mà giữ chỗ cho bạn.</p>
+      <div class="face" id="face" aria-hidden="true">🙂</div>
+
+      <div class="choices" id="choices">
+        <button class="btn btn-big btn-yes" id="btnYes" type="button">Có, mình đến!</button>
+        <button class="btn btn-big btn-no" id="btnNo" type="button">Không</button>
+      </div>
+
+      <!-- Form hiện ra sau khi bấm Có -->
+      <form class="card form" id="rsvpForm" hidden novalidate>
+        <div class="field">
+          <label for="fName">Tên của bạn</label>
+          <input id="fName" name="name" type="text" autocomplete="name" maxlength="80" required>
+        </div>
+        <div class="field">
+          <label for="fEmail">Email để mình gửi xác nhận</label>
+          <input id="fEmail" name="email" type="email" autocomplete="email" inputmode="email" maxlength="120" required>
+        </div>
+        <div class="field">
+          <label for="fGuests">Số người đi cùng (tính cả bạn)</label>
+          <select id="fGuests" name="guests">
+            <option value="1">1 người</option>
+            <option value="2">2 người</option>
+            <option value="3">3 người</option>
+            <option value="4">4 người</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="fMsg">Lời nhắn cho mình (không bắt buộc)</label>
+          <textarea id="fMsg" name="message" rows="3" maxlength="300"></textarea>
+        </div>
+
+        <!-- Ô bẫy bot: người thật không thấy -->
+        <div class="hp" aria-hidden="true">
+          <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+        </div>
+
+        <p class="form-error" id="formError" role="alert"></p>
+        <button class="btn btn-big btn-yes" id="submitBtn" type="submit">Gói ghém lời thương</button>
+      </form>
+
+
+      <!-- Đóng gói thông tin thành một phong bì -->
+      <div class="pack" id="pack" hidden>
+        <svg class="envelope" viewBox="0 0 160 130" aria-hidden="true">
+          <path class="env-flap-open" d="M8 14 L80 -34 L152 14 Z" fill="#C9CDD2" stroke="#0F0F10" stroke-width="4" stroke-linejoin="round"/>
+          <g class="env-paper">
+            <rect x="26" y="-6" width="108" height="76" rx="6" fill="#fff" stroke="#0F0F10" stroke-width="3.5"/>
+            <path d="M42 12h76M42 28h76M42 44h48" stroke="#A9AEB5" stroke-width="4" stroke-linecap="round"/>
+          </g>
+          <rect x="8" y="14" width="144" height="104" rx="10" fill="#F1F2F4" stroke="#0F0F10" stroke-width="4"/>
+          <path d="M10 116 L80 66 L150 116" fill="none" stroke="#0F0F10" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+          <path class="env-flap-closed" d="M8 14 L80 76 L152 14 Z" fill="#DADDE1" stroke="#0F0F10" stroke-width="4" stroke-linejoin="round"/>
+          <g class="env-seal">
+            <circle cx="80" cy="72" r="13" fill="#8C929A" stroke="#0F0F10" stroke-width="3"/>
+            <path d="M80 78 c-7-5-8-10-4-12 2-1 4 0 4 2 0-2 2-3 4-2 4 2 3 7-4 12z" fill="#FFFFFF"/>
+          </g>
+        </svg>
+        <p class="pack-text" id="packText" role="status">Đang đóng gói...</p>
+      </div>
+
+      <!-- Sân bóng: kéo bóng vào rổ thì thiệp mới được gửi đi -->
+      <div class="card shoot" id="shoot" hidden>
+        <canvas class="court" id="court" aria-label="Sân bóng rổ: kéo quả bóng xuống rồi thả tay để ném vào rổ"></canvas>
+        <p class="shoot-msg" id="shootMsg" role="status" aria-live="polite"></p>
+        <div class="shoot-actions">
+          <button class="btn btn-light" id="autoShot" type="button">Ném giúp mình</button>
+          <button class="btn btn-dark" id="retryBtn" type="button" hidden>Gửi lại</button>
+        </div>
+      </div>
+
+      <!-- Hiện sau khi gửi thành công -->
+      <div class="card done" id="done" hidden tabindex="-1">
+        <h3 id="doneTitle">Hẹn gặp bạn nhé!</h3>
+        <p id="doneText"></p>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
